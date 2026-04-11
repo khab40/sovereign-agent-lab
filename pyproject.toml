@@ -4,17 +4,13 @@ version = "0.1.0"
 description = "Build your Sovereign Agent — LangGraph automator or Rasa digital employee"
 requires-python = ">=3.12"
 dependencies = [
-    # Nebius / OpenAI-compatible client
     "openai>=1.30.0",
-    # Environment variable loading (.env files)
     "python-dotenv>=1.0.0",
-    # HTTP calls (weather API, external services)
     "requests>=2.31.0",
-    # LangGraph — the agent loop framework used in Exercise 2
-    "langgraph>=0.2.0",
-    "langchain-openai>=0.1.0",
-    "langchain-core>=0.2.0",
-    # MCP — Model Context Protocol, used in Exercise 4
+    "langchain==1.2.15",
+    "langchain-openai==1.1.12",
+    "langchain-core==1.2.27",
+    "langgraph==1.1.6",
     "mcp[cli]>=1.0.0",
 ]
 

@@ -37,13 +37,16 @@ import json
 import os
 import sys
 from pathlib import Path
+from typing import Any
 
 from dotenv import load_dotenv
+from langchain_core.messages import ToolMessage
 from langchain_core.tools import StructuredTool
 from langchain_openai import ChatOpenAI
 from langgraph.prebuilt import create_react_agent
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
+from pydantic import Field, create_model
 
 load_dotenv()
 
@@ -53,6 +56,22 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 SERVER_SCRIPT = str(Path(__file__).parent.parent / "sovereign_agent" / "tools" / "mcp_venue_server.py")
 OUTPUTS_DIR   = Path(__file__).parent / "outputs"
 OUTPUTS_DIR.mkdir(exist_ok=True)
+
+SYSTEM_PROMPT = """
+You are an Edinburgh venue research agent using MCP tools backed by the local
+venue database.
+
+Rules:
+- Always use the MCP tools when the user asks about venue availability or details.
+- First call search_venues to find candidate venues.
+- Treat the first venue returned by search_venues as the best match.
+- If the user asks for the best match and full address, call get_venue_details
+  for that selected venue before answering.
+- If search_venues returns zero matches, do not call get_venue_details.
+- Do not invent venue data.
+- After using the tools, provide a short final answer naming the chosen venue
+  and its address, or clearly state that no matching venue exists.
+"""
 
 
 # ─── MCP → LangChain bridge ───────────────────────────────────────────────────
@@ -78,6 +97,45 @@ def _make_mcp_caller(tool_name: str, server_script: str):
     return call
 
 
+def _schema_type(schema: dict[str, Any] | None) -> type:
+    schema = schema or {}
+    schema_type = schema.get("type")
+    if schema_type == "integer":
+        return int
+    if schema_type == "number":
+        return float
+    if schema_type == "boolean":
+        return bool
+    if schema_type == "array":
+        return list[Any]
+    if schema_type == "object":
+        return dict[str, Any]
+    return str
+
+
+def _args_model(tool_name: str, input_schema: dict[str, Any]) -> type:
+    properties = input_schema.get("properties", {})
+    required = set(input_schema.get("required", []))
+    fields = {}
+
+    for field_name, field_schema in properties.items():
+        field_type = _schema_type(field_schema)
+        title = field_schema.get("title") or field_name.replace("_", " ").title()
+        description = field_schema.get("description")
+        if field_name in required:
+            default = ...
+        else:
+            default = None
+            field_type = field_type | None
+        fields[field_name] = (
+            field_type,
+            Field(default=default, title=title, description=description),
+        )
+
+    model_name = input_schema.get("title") or f"{tool_name.title().replace('_', '')}Args"
+    return create_model(model_name, **fields)
+
+
 async def discover_tools(server_script: str) -> list:
     """
     Connect once, list all tools, and wrap each as a LangChain StructuredTool.
@@ -97,6 +155,8 @@ async def discover_tools(server_script: str) -> list:
                     func=_make_mcp_caller(t.name, server_script),
                     name=t.name,
                     description=t.description or f"MCP tool: {t.name}",
+                    args_schema=_args_model(t.name, t.inputSchema),
+                    infer_schema=False,
                 )
                 tools.append(lc_tool)
             return tools, [t.name for t in raw.tools]
@@ -114,6 +174,21 @@ def extract_trace(result: dict) -> list:
                 if isinstance(block, dict) and block.get("type") == "tool_use":
                     trace.append({"role": "tool_call", "tool": block["name"],
                                   "args": block.get("input", {})})
+        for tc in getattr(m, "tool_calls", []) or []:
+            trace.append({"role": "tool_call", "tool": tc.get("name", ""),
+                          "args": tc.get("args", {})})
+        for tc in (getattr(m, "additional_kwargs", {}) or {}).get("tool_calls", []) or []:
+            fn = tc.get("function", {}) or {}
+            raw_args = fn.get("arguments", {})
+            if isinstance(raw_args, str):
+                try:
+                    raw_args = json.loads(raw_args)
+                except json.JSONDecodeError:
+                    pass
+            trace.append({"role": "tool_call", "tool": fn.get("name", ""),
+                          "args": raw_args})
+        if isinstance(m, ToolMessage):
+            trace.append({"role": "tool", "content": str(content)})
         elif content:
             trace.append({"role": role, "content": str(content)})
     return trace
@@ -145,7 +220,7 @@ async def main() -> None:
     tools, tool_names = await discover_tools(SERVER_SCRIPT)
     print(f"\n  Discovered {len(tools)} tools: {tool_names}")
 
-    agent  = create_react_agent(llm, tools)
+    agent  = create_react_agent(llm, tools, prompt=SYSTEM_PROMPT)
     output = {"server_script": SERVER_SCRIPT, "tools_discovered": tool_names, "queries": {}}
 
     # ── Query 1: search + detail fetch ────────────────────────────────────────

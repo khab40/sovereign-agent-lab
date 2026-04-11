@@ -7,30 +7,37 @@ Fill this in after running exercise4_mcp_client.py.
 # ── Basic results ──────────────────────────────────────────────────────────
 
 # Tool names as shown in "Discovered N tools" output.
-TOOLS_DISCOVERED = []
+TOOLS_DISCOVERED = ['search_venues', 'get_venue_details']
 
-QUERY_1_VENUE_NAME    = "FILL_ME_IN"
-QUERY_1_VENUE_ADDRESS = "FILL_ME_IN"
-QUERY_2_FINAL_ANSWER  = "FILL_ME_IN"
+QUERY_1_VENUE_NAME    = "The Albanach"
+QUERY_1_VENUE_ADDRESS = "2 Hunter Square, Edinburgh"
+QUERY_2_FINAL_ANSWER  = "The best match is 'The Albanach' at 2 Hunter Square, Edinburgh."
 
 # ── The experiment ─────────────────────────────────────────────────────────
 # Required: modify venue_server.py, rerun, revert.
 
-EX4_EXPERIMENT_DONE = None   # True or False
+EX4_EXPERIMENT_DONE = True   # True or False
 
 # What changed, and which files did or didn't need updating? Min 30 words.
 EX4_EXPERIMENT_RESULT = """
-FILL ME IN
+Changing The Albanach from available to full in mcp_venue_server.py changed Query 1 automatically. 
+Before the change, search_venues returned both The Albanach and The Haymarket Vaults, and the agent selected The Albanach. 
+After the change, search_venues returned only The Haymarket Vaults, so the final answer switched to that venue. 
+Query 2 did not change because no venue can hold 300 vegan guests in both version. 
+I only updated the shared MCP server data file; the LangGraph client in exercise4_mcp_client.py did not need logic changes for the experiment itself.
 """
 
 # ── MCP vs hardcoded ───────────────────────────────────────────────────────
 
-LINES_OF_TOOL_CODE_EX2 = 0   # count in exercise2_langgraph.py
-LINES_OF_TOOL_CODE_EX4 = 0   # count in exercise4_mcp_client.py
+LINES_OF_TOOL_CODE_EX2 = 283   # count in exercise2_langgraph.py
+LINES_OF_TOOL_CODE_EX4 = 265   # count in exercise4_mcp_client.py
 
 # What does MCP buy you beyond "the tools are in a separate file"? Min 30 words.
 MCP_VALUE_PROPOSITION = """
-FILL ME IN
+MCP gives you a stable tool interface that multiple clients can reuse, 
+not just cleaner file organization. 
+The LangGraph agent and a future Rasa action can both call the same venue server without duplicating tool logic. 
+When the venue data changes, the client behavior changes automatically through the shared protocol, so we update one server instead of rewriting each agent.
 """
 
 # ── Week 5 architecture ────────────────────────────────────────────────────
@@ -39,11 +46,13 @@ FILL ME IN
 # naming a component and explaining why that component does that job.
 
 WEEK_5_ARCHITECTURE = """
-- FILL ME IN
-- FILL ME IN
-- FILL ME IN
-- FILL ME IN
-- FILL ME IN
+- The Headless Automator in `sovereign_agent/` handles open-ended research and planning because it can break a task into steps, call tools, and continue autonomously without a human guiding every turn.
+- The shared MCP server in `sovereign_agent/tools/mcp_venue_server.py` exposes common tools through one interface so both the LangGraph agent and the Rasa side can use the same capabilities without duplicating tool logic.
+- A planner and executor split is added in Week 3 so one component can reason about the overall strategy while another faster component performs the concrete tool calls and execution work.
+- The memory layer in `sovereign_agent/memory/` stores persistent notes and retrieval data so the system can remember previous searches, bookings, and useful facts across sessions instead of starting from zero every time.
+- The Rasa Digital Employee in `exercise3_rasa/` handles structured conversations with people because confirmation calls need explicit flows, predictable fallbacks, and deterministic business rule enforcement.
+- The voice pipeline adds Whisper STT, Rasa CALM, an LLM, and TTS so a human caller can speak naturally while the system still routes the request through controlled conversational logic.
+- Observability and safety guardrails are part of the Week 5 production system so the final agent can be monitored, audited, and kept within acceptable cost and behaviour limits during live use.
 """
 
 # ── The guiding question ───────────────────────────────────────────────────
@@ -51,5 +60,9 @@ WEEK_5_ARCHITECTURE = """
 # Must reference specific things you observed in your runs. Min 60 words.
 
 GUIDING_QUESTION_ANSWER = """
-FILL ME IN
+Research - the one using LagGraph. For the call - Rasa-based.
+In Exercise 2 runs, LangGraph worked well for open-ended tool use: it checked venues, handled an unavailable venue, calculated catering, checked weather, and generated a flyer. 
+That kind of flexible planning fits research. 
+In Exercise 3, Rasa was better for the call because it followed an explicit booking flow, collected guest count, vegan count, and deposit, then applied deterministic Python guards. 
+Swapping them looks incorrect because LangGraph is too open-ended for a high-stakes confirmation call, while Rasa is too constrained for broad autonomous research.
 """
