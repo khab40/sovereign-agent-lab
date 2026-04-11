@@ -76,7 +76,7 @@
       },
       {
         "role": "tool",
-        "content": "{\"success\": true, \"temp_c\": 11.3, \"description\": \"Overcast\", \"precipitation_mm\": 0.0, \"outdoor_ok\": false}"
+        "content": "{\"success\": true, \"temp_c\": 9.7, \"description\": \"Overcast\", \"precipitation_mm\": 0.0, \"outdoor_ok\": false}"
       },
       {
         "role": "tool_call",
@@ -101,7 +101,7 @@
       },
       {
         "role": "tool",
-        "content": "{\"success\": true, \"prompt_used\": \"Professional event flyer for AI Meetup, Edinburgh, professional at The Albanach, Edinburgh. 160 guests tonight. Warm lighting, Scottish architecture background, clean modern typography.\", \"image_url\": \"https://pictures-storage.storage.eu-north1.nebius.cloud/text2img-0e2dbd10-8b24-4481-82c3-9ea8cc3f3c57_00001_.webp\"}"
+        "content": "{\"success\": true, \"prompt_used\": \"Professional event flyer for AI Meetup, Edinburgh, professional at The Albanach, Edinburgh. 160 guests tonight. Warm lighting, Scottish architecture background, clean modern typography.\", \"image_url\": \"https://pictures-storage.storage.eu-north1.nebius.cloud/text2img-40e5af31-3ef1-4089-b797-e6c71ec62394_00001_.webp\"}"
       },
       {
         "role": "ai",
@@ -111,7 +111,7 @@
     "success": true
   },
   "task_b": {
-    "final_answer": "Flyer generated successfully for The Haymarket Vaults. Image URL: https://pictures-storage.storage.eu-north1.nebius.cloud/text2img-e38004f5-fb20-4892-bc9a-1cb3503a428a_00001_.webp",
+    "final_answer": "Flyer generation failed for The Haymarket Vaults. Error: Request timed out.",
     "tool_calls_made": [
       {
         "tool": "generate_event_flyer",
@@ -138,11 +138,11 @@
       },
       {
         "role": "tool",
-        "content": "{\"success\": true, \"prompt_used\": \"Professional event flyer for Edinburgh AI Meetup, tech professionals, modern venue at The Haymarket Vaults, Edinburgh. 160 guests tonight. Warm lighting, Scottish architecture background, clean modern typography.\", \"image_url\": \"https://pictures-storage.storage.eu-north1.nebius.cloud/text2img-e38004f5-fb20-4892-bc9a-1cb3503a428a_00001_.webp\"}"
+        "content": "{\"success\": false, \"error\": \"Request timed out.\", \"prompt_used\": \"Professional event flyer for Edinburgh AI Meetup, tech professionals, modern venue at The Haymarket Vaults, Edinburgh. 160 guests tonight. Warm lighting, Scottish architecture background, clean modern typography.\", \"image_url\": \"\"}"
       },
       {
         "role": "ai",
-        "content": "Flyer generated successfully for The Haymarket Vaults. Image URL: https://pictures-storage.storage.eu-north1.nebius.cloud/text2img-e38004f5-fb20-4892-bc9a-1cb3503a428a_00001_.webp"
+        "content": "Flyer generation failed for The Haymarket Vaults. Error: Request timed out."
       }
     ],
     "success": true
