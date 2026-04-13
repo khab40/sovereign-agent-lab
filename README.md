@@ -457,6 +457,14 @@ Run `make install` from the project root (where the `Makefile` is).
 Rasa downloads embedding models on first train (~300–500 MB). Check internet
 connection and disk space, then try again.
 
+**Exercise 3: repeated `Provider List: https://docs.litellm.ai/docs/providers`**
+This comes from LiteLLM while Rasa CALM resolves the LLM provider. Check
+`exercise3_rasa/endpoints.yml`: the Nebius models should be configured with the
+OpenAI-compatible provider and explicit `openai/` model prefixes:
+`provider: openai`, `model: openai/meta-llama/Llama-3.3-70B-Instruct`, and
+`model: openai/Qwen/Qwen3-Embedding-8B`. After changing endpoints, rerun
+`make ex3-retrain`, then restart `make ex3-actions` and `make ex3-chat`.
+
 **Exercise 3: licence key error**
 Check `.env` has `RASA_PRO_LICENSE=your-key` with no quotes and no spaces.
 
