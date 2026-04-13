@@ -30,6 +30,7 @@ TASK_A_CATERING_COST_GBP = 5600.0
 TASK_A_OUTDOOR_OK = True
 
 TASK_A_NOTES = "Looks they work correctly and logically in terms of the order of calling." \
+"Availability should happen before catering/weather/flyer because it avoids spending tool calls on an invalid venue. This covers design choices and cost/latency tradeoff." \
 "Spent some decent time to return the list of tools used. " \
 "First, LangChain packages with create_react_agent are deprecated in the source code of the original task definition. " \
 "Secondly, made System Prompt to instruct LLM to use Tools if they are available. " \
@@ -52,7 +53,8 @@ TASK_B_PROMPT_USED = "Professional event flyer for Edinburgh AI Meetup, tech pro
 # Scenario 1: first choice unavailable
 # Quote the specific message where the agent changed course. Min 20 words.
 SCENARIO_1_PIVOT_MOMENT = """
-After the tool result showed that The Bow Bar had capacity 80, status full, and meets_all_constraints false, the agent changed course and checked The Albanach instead, which then returned meets_all_constraints true.
+After the tool result showed that The Bow Bar had capacity 80, status full, and meets_all_constraints false, the agent changed course and checked The Albanach instead,
+which then returned meets_all_constraints true.
 """
 
 SCENARIO_1_FALLBACK_VENUE = "The Albanach"
@@ -64,6 +66,7 @@ SCENARIO_2_HALLUCINATED = False   # True or False
 # Paste the final [AI] message.
 SCENARIO_2_FINAL_ANSWER = """
 None of the known venues meet the capacity and dietary requirements for 300 people with vegan options.
+Safe refusal is the correct approach: no hallucinated venue is better than inventing an answer outside the known venue set.
 """
 
 # Scenario 3: out of scope (train times)
@@ -74,9 +77,11 @@ SCENARIO_3_RESPONSE = "Your input is lacking necessary details. Please provide m
 
 # Would this behaviour be acceptable in a real booking assistant? Min 30 words.
 SCENARIO_3_ACCEPTABLE = """
-This would not be fully acceptable in a real booking assistant. The response is generic and does not clearly explain that train times are outside the assistants scope. 
+This would not be fully acceptable in a real booking assistant. The response is generic and does not clearly explain that train times are outside the assistants scope.
 A better response would explicitly say that the assistant only handles booking-related venue tasks and cannot help with rail travel information.
-"""""
+Repeated flyer generation is not just weird, it can waste money, increase latency, and produce duplicate side effects.
+The fix is a clear success/stop condition after tool completion.
+"""
 
 # ── Task D ─────────────────────────────────────────────────────────────────
 
@@ -107,6 +112,7 @@ TASK_D_COMPARISON = """
 * Rasa flow: larger explicit structure, behavior defined up front
 * LangGraph is better for open-ended research
 * Rasa is better for controlled confirmation workflows where every step should be visible and enforced
+* LangGraph’s visible graph is small because the complexity lives in the agent loop, prompt, and tool contracts; Rasa’s complexity is explicit in flows/rules, which makes it easier to audit.
 """
 
 # ── Reflection ─────────────────────────────────────────────────────────────
@@ -121,4 +127,6 @@ During Task B it tried the flyer call multiple times, which made the run feel li
 it was stuck in a tool loop. I fixed the run by tightening the system prompt so it
 would not repeat successful tool calls, and by adding tool-call extraction logic so
 the trace showed what the agent was actually doing.
+Repeated flyer generation is not just weird, it can waste money, increase latency, and produce duplicate side effects.
+The fix is a clear success/stop condition after tool completion.
 """
