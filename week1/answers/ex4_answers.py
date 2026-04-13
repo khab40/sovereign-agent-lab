@@ -24,7 +24,8 @@ Changing The Albanach from available to full in mcp_venue_server.py changed Quer
 Before the change, search_venues returned both The Albanach and The Haymarket Vaults, and the agent selected The Albanach. 
 After the change, search_venues returned only The Haymarket Vaults, so the final answer switched to that venue. 
 Query 2 did not change because no venue can hold 300 vegan guests in both version. 
-I only updated the shared MCP server data file; the LangGraph client in exercise4_mcp_client.py did not need logic changes for the experiment itself.
+I only updated the shared MCP server data file; the LangGraph client in exercise4_mcp_client.py did not need logic 
+changes for the experiment itself.
 """
 
 # ── MCP vs hardcoded ───────────────────────────────────────────────────────

@@ -72,7 +72,7 @@ Your input ->  /stop
 """
 
 CONVERSATION_2_OUTCOME = "escalated"   # "confirmed" or "escalated"
-CONVERSATION_2_REASON  = "Deposit is too high"   # the reason the agent gave for escalating
+CONVERSATION_2_REASON  = "Deposit is too high, 300 pounds is the limit"   # the reason the agent gave for escalating
 
 # ── Conversation 3: Out of scope ───────────────────────────────────────────
 
@@ -94,13 +94,19 @@ Your input ->    /stop
 
 # Describe what CALM did after the out-of-scope message. Min 20 words.
 CONVERSATION_3_WHAT_HAPPENED = """
-CALM answered that it was not trained to help with these out of scope questions. Suggested to contact event organizer directly. Still was ready to answer on relevant questions.
+CALM answered that it was not trained to help with these out of scope questions. 
+Suggested to contact event organizer directly. 
+Still was ready to answer on relevant questions.
 """
 
 # Compare Rasa CALM's handling of the out-of-scope request to what
 # LangGraph did in Exercise 2 Scenario 3. Min 40 words.
 OUT_OF_SCOPE_COMPARISON = """
-Rasa CALM handles the out-of-scope request by explicitly deflecting it into a separate flow and giving a narrow, policy-safe response. That makes the behaviour predictable and auditable. In Exercise 2 Scenario 3, the LangGraph agent was more open-ended: it reasoned through the problem, explored alternatives, and could explain failure. So CALM is stricter and safer for boundary enforcement, while LangGraph is more flexible for ambiguous or broader tasks.
+Rasa CALM handles the out-of-scope request by explicitly deflecting it into a separate flow and giving a narrow, 
+policy-safe response. That makes the behaviour predictable and auditable. 
+In Exercise 2 Scenario 3, the LangGraph agent was more open-ended: it reasoned through the problem, 
+explored alternatives, and could explain failure. 
+So CALM is stricter and safer for boundary enforcement, while LangGraph is more flexible for ambiguous or broader tasks.
 """
 
 # ── Task B: Cutoff guard ───────────────────────────────────────────────────
@@ -112,7 +118,8 @@ TASK_B_FILES_CHANGED = ["actions.py"]
 
 # How did you test that it works? Min 20 words.
 TASK_B_HOW_YOU_TESTED = """
-Changed now.hour > 16 or (now.hour == 16 and now.minute >= 45) to True, run re-train command, made re-test with server and chat client. New Guard was triggered and agent gave expected response about cutoff time. 
+Changed now.hour > 16 or (now.hour == 16 and now.minute >= 45) to True, run re-train command, made re-test with server and chat client. 
+New Guard was triggered and agent gave expected response about cutoff time. 
 """
 
 # ── CALM vs Old Rasa ───────────────────────────────────────────────────────
@@ -131,7 +138,13 @@ Changed now.hour > 16 or (now.hour == 16 and now.minute >= 45) to True, run re-t
 # Min 30 words.
 
 CALM_VS_OLD_RASA = """
-CALM removes a lot of the old Rasa plumbing. Instead of writing intent examples, regex-style slot parsing, and many dialogue rules, the LLM now handles flow selection and extracts values like guest counts from natural speech. Python still handles the important deterministic part: business rules such as capacity, deposit limit, vegan ratio, and cutoff time. That is necessary because those checks must be auditable and guaranteed. The gain is much simpler development and more natural language flexibility. The cost is that some understanding steps are now probabilistic, so I trusted the old rule-based approach more for exact classification and parsing, even though it required much more setup.
+CALM removes a lot of the old Rasa plumbing. Instead of writing intent examples, regex-style slot parsing, 
+and many dialogue rules, the LLM now handles flow selection and extracts values like guest counts from natural speech. 
+Python still handles the important deterministic part: business rules such as capacity, deposit limit, vegan ratio, 
+and cutoff time. That is necessary because those checks must be auditable and guaranteed. 
+The gain is much simpler development and more natural language flexibility. 
+The cost is that some understanding steps are now probabilistic, so I trusted the old rule-based approach more 
+for exact classification and parsing, even though it required much more setup.
 """
 
 # ── The setup cost ─────────────────────────────────────────────────────────
@@ -145,8 +158,11 @@ CALM removes a lot of the old Rasa plumbing. Instead of writing intent examples,
 # Min 40 words.
 
 SETUP_COST_VALUE = """
-CALM still has noticeable setup cost: multiple Rasa config files, model training, an action server, two terminals, and a Rasa Pro licence. 
+CALM still has noticeable setup cost: multiple Rasa config files, model training, an action server, two terminals, 
+and a Rasa Pro licence. 
 That is more overhead than LangGraph, which is much faster to wire together for open-ended tasks. 
-However, the setup buys controlled behaviour. The CALM agent is not supposed to improvise broadly, invent new workflows, or call tools outside the defined flow structure. 
-For the booking confirmation use case, that restriction is a feature, not a weakness, because the goal is reliability, auditable behaviour, and strict enforcement of business rules rather than creative autonomy.
+However, the setup buys controlled behaviour. The CALM agent is not supposed to improvise broadly, invent new workflows, 
+or call tools outside the defined flow structure. 
+For the booking confirmation use case, that restriction is a feature, not a weakness, because the goal is reliability, 
+auditable behaviour, and strict enforcement of business rules rather than creative autonomy.
 """

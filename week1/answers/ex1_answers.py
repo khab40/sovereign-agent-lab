@@ -66,6 +66,11 @@ Part C ran because the larger model stayed correct in both Part A and Part B, so
 # "Context formatting matters most when..."
 
 CORE_LESSON = """
-Context formatting matters most when the model has to pick the correct answer from several similar-looking options, especially when distractors are close to being valid. In those situations, structure helps the model separate constraints more clearly and reduces the chance of shallow pattern matching. In my run, formatting did not change correctness on the clean dataset, but it did change which valid answer was selected, which shows that presentation still influences model behaviour even when accuracy stays high.
+Context formatting matters most when the model has to pick the correct answer from 
+several similar-looking options, especially when distractors are close to being valid. 
+In those situations, structure helps the model separate constraints more clearly and 
+reduces the chance of shallow pattern matching. In my run, formatting did not change 
+correctness on the clean dataset, but it did change which valid answer was selected, 
+which shows that presentation still influences model behaviour even when accuracy stays high.
 """
 

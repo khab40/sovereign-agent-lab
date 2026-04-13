@@ -6,7 +6,7 @@
 - [X] Add `RASA_PRO_LICENSE` to `.env` for Exercise 3
 - [X] Run `make install`
 - [X] Run `make smoke`
-- [X] Run `make test` - failure!
+- [X] Run `make test` - failure initially! Fixed.
 
 ## Exercise 1
 

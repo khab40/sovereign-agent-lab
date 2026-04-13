@@ -21,7 +21,7 @@ DEBUG_AGENT_TRACE = os.getenv("DEBUG_AGENT_TRACE") == "1"
 llm = ChatOpenAI(
     base_url="https://api.tokenfactory.nebius.com/v1/",
     api_key=os.getenv("NEBIUS_KEY"),
-    model="meta-llama/Llama-3.3-70B-Instruct-fast",
+    model="meta-llama/Llama-3.3-70B-Instruct",
     temperature=0,
 )
 
