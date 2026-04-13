@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-04-13 - Strengthened Week 1 answer analysis
+
+- Updated the Week 1 exercise answer files to better explain failure modes,
+  design rationale, local versus global correctness, trade-offs, anomalies, and
+  architecture boundaries.
+- Expanded the Exercise 1 prompt-formatting reflection to call out tie-breaking
+  behavior, shallow distractor failure risk, and the limits of drawing global
+  conclusions from a single successful run.
+- Expanded the Exercise 2 LangGraph reflections to discuss safe refusal,
+  out-of-scope behavior, tool-loop cost/latency risk, and the difference
+  between visible graph structure and behavior hidden inside the agent loop.
+- Expanded the Exercise 3 Rasa CALM reflections to cover boundary enforcement,
+  cutoff-guard test gaps, probabilistic slot extraction, and the operational
+  value of auditable flows.
+- Expanded the Exercise 4 MCP reflections to describe shared-contract benefits,
+  multi-client consistency, server-contract breakage risk, and planner/executor
+  safety boundaries.
+- Fixed the `LagGraph` typo in the Exercise 4 guiding-question answer and
+  cleaned trailing whitespace in the updated answer files.
+
 ## 2026-03-31 to 2026-04-11 - Troubleshooting non-running tasks and failing tests
 
 This entry summarizes the troubleshooting sequence reconstructed from the local
