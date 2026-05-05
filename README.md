@@ -1,3 +1,11 @@
+<p align="center">
+  <img src="img/github-banner.png" alt="Sovereign Agent Lab banner" width="100%">
+</p>
+
+<p align="center">
+  <img src="img/github-icon.png" alt="Sovereign Agent Lab icon" width="96" height="96">
+</p>
+
 # Edinburgh Agent — Week 1 Assignment
 **AI Performance Engineering · Module 1 · Nebius Academy**
 
